@@ -1,6 +1,8 @@
 # timber-cutter
 
-A [Timberman](https://store.steampowered.com/app/398710/Timberman/) clone made with [ebitenengine](https://github.com/hajimehoshi/ebiten).
+A simple [Timberman](https://store.steampowered.com/app/398710/Timberman/) clone.
+
+Made with [ebitenengine](https://github.com/hajimehoshi/ebiten).
 
 ## How to run
 

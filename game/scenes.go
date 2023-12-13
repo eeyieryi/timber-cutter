@@ -1,11 +1,17 @@
 package game
 
 import (
-	"image/color"
+	"bytes"
+	"image"
 
+	"github.com/eeyieryi/timber-cutter/resources/images"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+var (
+	blockImg *ebiten.Image
 )
 
 type Scene int
@@ -19,6 +25,14 @@ const (
 
 type GameScene struct {
 	Current Scene
+}
+
+func init() {
+	img, _, err := image.Decode(bytes.NewReader(images.Img_Block_png))
+	if err != nil {
+		panic(err)
+	}
+	blockImg = ebiten.NewImageFromImage(img)
 }
 
 func (gs *GameScene) Draw(game *Game, screen *ebiten.Image) {
@@ -40,10 +54,10 @@ func (gs *GameScene) Draw(game *Game, screen *ebiten.Image) {
 }
 
 const (
-	treeWidth    float32 = 20
-	playerWidth  float32 = 30
+	treeWidth    float32 = 16 // 20
+	playerWidth  float32 = 32
 	playerHeight float32 = 50
-	branchWidth  float32 = 70
+	branchWidth  float32 = 64
 	branchHeight float32 = 5
 	gap          float32 = playerHeight
 )
@@ -75,7 +89,13 @@ func drawTree(screen *ebiten.Image, gameState *GameState) {
 	screenW, screenH := getScreenSize(screen)
 	var centerX float32 = screenW / 2
 
-	vector.DrawFilledRect(screen, centerX, 0, treeWidth, screenH, color.White, false)
+	for i := 0; i < int(screenH); i += int(branchHeight) {
+		geoM := ebiten.GeoM{}
+		geoM.Translate(float64(centerX), float64(i))
+		screen.DrawImage(blockImg, &ebiten.DrawImageOptions{GeoM: geoM})
+	}
+
+	// vector.DrawFilledRect(screen, centerX, 0, treeWidth, screenH, color.White, false)
 	for index, sectionPos := range gameState.Tree {
 		if sectionPos == PosNone {
 			continue

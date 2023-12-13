@@ -7,6 +7,11 @@
 !/go.sum
 !/main.go
 
+!/resources
+!/resources/images
+!/resources/images/block.png
+!/resources/images/images.go
+
 !/.gitignore
 !/LICENSE
 !/README.md
