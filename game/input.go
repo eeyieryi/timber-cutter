@@ -12,16 +12,16 @@ func handleInput(g *Game) error {
 
 	switch g.Scene.Current {
 	case NewGameScene:
-		if someJustPressed(ebiten.KeySpace) {
+		if someKeysJustPressed(ebiten.KeySpace) {
 			g.StartNewGame()
 		}
 	case PlayingScene:
-		if someJustPressed(ebiten.KeyEscape) {
+		if someKeysJustPressed(ebiten.KeyEscape) {
 			g.Scene.Current = PauseScene
 		}
 
-		isLeftPressed := someJustPressed(ebiten.KeyArrowLeft, ebiten.KeyH)
-		isRightPressed := someJustPressed(ebiten.KeyArrowRight, ebiten.KeyL)
+		isLeftPressed := someKeysJustPressed(ebiten.KeyArrowLeft, ebiten.KeyH)
+		isRightPressed := someKeysJustPressed(ebiten.KeyArrowRight, ebiten.KeyL)
 
 		goTo := PosNone
 		if isLeftPressed && !isRightPressed {
@@ -54,11 +54,11 @@ func handleInput(g *Game) error {
 			}
 		}
 	case PauseScene:
-		if someJustPressed(ebiten.KeyEscape) {
+		if someKeysJustPressed(ebiten.KeyEscape) {
 			g.Scene.Current = PlayingScene
 		}
 	case GameOverScene:
-		if someJustPressed(ebiten.KeySpace) {
+		if someKeysJustPressed(ebiten.KeySpace) {
 			g.StartNewGame()
 		}
 	}
@@ -66,7 +66,7 @@ func handleInput(g *Game) error {
 	return nil
 }
 
-func someJustPressed(keys ...ebiten.Key) bool {
+func someKeysJustPressed(keys ...ebiten.Key) bool {
 	for _, k := range keys {
 		if inpututil.IsKeyJustPressed(k) {
 			return true
