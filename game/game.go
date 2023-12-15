@@ -13,18 +13,24 @@ type Game struct {
 	Scene GameScene
 }
 
-func (g *Game) StartNewGame() {
+func (g *Game) ResetGame() {
 	g.State = NewGameState()
+	g.Scene.Current = NewGameScene
+}
+
+func (g *Game) Play() {
 	g.Scene.Current = PlayingScene
 }
 
-func (g *Game) Update() (err error) {
-	// TODO: Temporary
-	if g.Scene.Current == NewGameScene {
-		g.StartNewGame()
-		return
-	}
+func (g *Game) Pause() {
+	g.Scene.Current = PauseScene
+}
 
+func (g *Game) Update() (err error) {
+	switch g.State {
+	case nil:
+		g.ResetGame()
+	}
 	err = handleInput(g)
 	return
 }

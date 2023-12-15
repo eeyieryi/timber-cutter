@@ -5,7 +5,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-func handleInput(g *Game) error {
+func handleInput(g *Game) (err error) {
+	// TODO: REMOVE
 	if ebiten.IsKeyPressed(ebiten.KeyQ) {
 		return ErrTerminated
 	}
@@ -13,11 +14,12 @@ func handleInput(g *Game) error {
 	switch g.Scene.Current {
 	case NewGameScene:
 		if someKeysJustPressed(ebiten.KeySpace) {
-			g.StartNewGame()
+			g.Play()
 		}
 	case PlayingScene:
 		if someKeysJustPressed(ebiten.KeyEscape) {
-			g.Scene.Current = PauseScene
+			g.Pause()
+			return
 		}
 
 		isLeftPressed := someKeysJustPressed(ebiten.KeyArrowLeft, ebiten.KeyH)
@@ -33,13 +35,13 @@ func handleInput(g *Game) error {
 		switch goTo {
 		case PosLeft, PosRight:
 			hit, root := func() (hit, root bool) {
-				for i, sectionPos := range g.State.Tree[:2] {
+				for index, sectionPos := range g.State.Tree[:2] {
 					switch sectionPos {
 					case PosNone:
 						continue
 					case PosLeft, PosRight:
 						if goTo == sectionPos {
-							return true, i == 0
+							return true, index == 0
 						}
 					}
 				}
@@ -55,15 +57,15 @@ func handleInput(g *Game) error {
 		}
 	case PauseScene:
 		if someKeysJustPressed(ebiten.KeyEscape) {
-			g.Scene.Current = PlayingScene
+			g.Play()
 		}
 	case GameOverScene:
 		if someKeysJustPressed(ebiten.KeySpace) {
-			g.StartNewGame()
+			g.ResetGame()
 		}
 	}
 
-	return nil
+	return
 }
 
 func someKeysJustPressed(keys ...ebiten.Key) bool {

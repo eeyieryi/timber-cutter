@@ -6,7 +6,6 @@ import (
 
 	"github.com/eeyieryi/timber-cutter/resources/images"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
@@ -38,27 +37,32 @@ func init() {
 func (gs *GameScene) Draw(game *Game, screen *ebiten.Image) {
 	switch gs.Current {
 	case NewGameScene:
-		ebitenutil.DebugPrint(screen, "NEW GAME")
+		drawTree(screen, game.State)
+		drawPlayer(screen, game.State)
+		// TODO: drawNewGameOverlay()
 	case PlayingScene:
-		ebitenutil.DebugPrint(screen, "PLAYING")
 		drawPlayer(screen, game.State)
 		drawTree(screen, game.State)
+		// TODO: drawScore()
 	case PauseScene:
-		ebitenutil.DebugPrint(screen, "PAUSE")
 		drawTree(screen, game.State)
+		// TODO: drawPauseOverlay()
+		// TODO: drawScore()
 	case GameOverScene:
-		ebitenutil.DebugPrint(screen, "GAME OVER")
 		drawPlayer(screen, game.State)
 		drawTree(screen, game.State)
+		// TODO: drawScore()
+		// TODO: drawGameOverOverlay()
 	}
 }
 
 const (
-	treeWidth    float32 = 16 // 20
+	treeWidth    float32 = 64
+	treeDrawGap  int     = 5
 	playerWidth  float32 = 32
-	playerHeight float32 = 50
+	playerHeight float32 = 64
 	branchWidth  float32 = 64
-	branchHeight float32 = 5
+	branchHeight float32 = 16
 	gap          float32 = playerHeight
 )
 
@@ -73,10 +77,10 @@ func drawPlayer(screen *ebiten.Image, gameState *GameState) {
 	var rectX float32
 	switch gameState.PlayerPos {
 	case PosLeft:
-		leftX := centerX - playerWidth
+		leftX := centerX - playerWidth*1.5 - treeWidth/2
 		rectX = leftX
 	case PosRight:
-		rightX := centerX + treeWidth
+		rightX := centerX + playerWidth*0.5 + treeWidth/2
 		rectX = rightX
 	}
 
@@ -89,9 +93,10 @@ func drawTree(screen *ebiten.Image, gameState *GameState) {
 	screenW, screenH := getScreenSize(screen)
 	var centerX float32 = screenW / 2
 
-	for i := 0; i < int(screenH); i += int(branchHeight) {
+	for y := 0; y < int(screenH); y += treeDrawGap {
 		geoM := ebiten.GeoM{}
-		geoM.Translate(float64(centerX), float64(i))
+		geoM.Scale(4, 4)
+		geoM.Translate(float64(centerX-treeWidth/2), float64(y))
 		screen.DrawImage(blockImg, &ebiten.DrawImageOptions{GeoM: geoM})
 	}
 
@@ -104,9 +109,9 @@ func drawTree(screen *ebiten.Image, gameState *GameState) {
 		var branchX float32
 		switch sectionPos {
 		case PosLeft:
-			branchX = centerX - branchWidth
+			branchX = centerX - branchWidth - treeWidth/2
 		case PosRight:
-			branchX = centerX + treeWidth
+			branchX = centerX + treeWidth/2
 		}
 
 		var branchY float32 = screenH - branchHeight - float32(index)*gap
