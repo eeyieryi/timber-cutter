@@ -12,8 +12,8 @@ Made with [ebitenengine](https://github.com/hajimehoshi/ebiten).
 go run github.com/eeyieryi/timber-cutter@latest
 ```
 
-### On your browser
+### On the browser
 
-Access the website [eeyieryi.github.io/timber-cutter](https://eeyieryi.github.io/timber-cutter)
+Available at [eeyieryi.itch.io/timber-cutter](https://eeyieryi.itch.io/timber-cutter).
 
 ## Screenshots
