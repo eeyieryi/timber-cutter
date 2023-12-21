@@ -12,6 +12,11 @@
 !/resources/images/block.png
 !/resources/images/images.go
 
+!/screenshots
+
 !/.gitignore
 !/LICENSE
 !/README.md
+!/TODO.md
+
+**/.DS_Store
